@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Battleship</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+  <div id="app">
+    <div id="mybutton">
+      <button class="rotate" v-on:click="Rotate()" >Rotate</button>
+    </div>
+    <div id="battleship">
+      <div v-for="index in gameSize" :id="'row' + index" class="row">
+        <div v-for="index1 in gameSize" :id="'column' + index1" class="column" @mouseover="hover(index, index1)" :ref="index + ':' + index1" v-on:click="fire(index, index1)" style="width:10%">
+
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Place your ships</h4>
+            </div>
+            <div class="modal-body">
+              <p v-bind:class="{ disabled: carrierPlaced}" v-on:click="placeCarrier()" id="carrier" class="placeShip">Carrier = 5</p>
+              <p v-bind:class="{ disabled: battleshipPlaced}" v-on:click="placeBattleship()" id="battleship" class="placeShip">Battleship = 4</p>
+              <p v-bind:class="{ disabled: submarinePlaced}" v-on:click="placeSubmarine()" id="submarine" class="placeShip">Submarine = 3</p>
+              <p v-bind:class="{ disabled: cruiserPlaced}" v-on:click="placeCruiser()" id="cruiser" class="placeShip">Cruiser = 3</p>
+              <p v-bind:class="{ disabled: destroyerPlaced}" v-on:click="placeDestroyer()" id="destroyer" class="placeShip">Destroyer = 2</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    var socket = null;
+    var app = new Vue({
+      el: '#app',
+      data: {
+        gameSize: 10,
+        localBoard: [10][10],
+        carrierPlaced: false,
+        battleshipPlaced: false,
+        submarinePlaced: false,
+        cruiserPlaced: false,
+        destroyerPlaced: false,
+        carrierPlacing: false,
+        battleshipPlacing: false,
+        submarinePlacing: false,
+        cruiserPlacing: false,
+        destroyerPlacing: false,
+        showModal: false,
+        placingShips: true,
+        vertical: true,
+        horizontal: false,
+      },
+      methods: {
+        placeCarrier: function(){
+          if(!this.carrierPlaced){
+            console.log("PLACE THE CARRIER");
+            this.carrierPlaced = true;
+            this.carrierPlacing = true;
+            this.showModal = false;
+          }else{
+            console.log("This ship is already placed!");
+          }
+        },
+        placeBattleship: function(){
+          if(!this.battleshipPlaced){
+            console.log("PLACE THE BATTLESHIP");
+            this.battleshipPlaced = true;
+            this.battleshipPlacing = true;
+            this.showModal = false;
+          }else{
+            console.log("This ship is already placed!");
+          }
+        },
+        placeSubmarine: function(){
+          if(!this.submarinePlaced){
+            console.log("PLACE THE SUBMARINE");
+            this.submarinePlaced = true;
+            this.submarinePlacing = true;
+            this.showModal = false;
+          }else{
+            console.log("This ship is already placed!");
+          }
+        },
+        placeCruiser: function(){
+          if(!this.cruiserPlaced){
+            console.log("PLACE THE CRUISER");
+            this.cruiserPlaced = true;
+            this.cruiserPlacing = true;
+            this.showModal = false;
+          }else{
+            console.log("This ship is already placed!");
+          }
+        },
+        placeDestroyer: function(){
+          if(!this.destroyerPlaced){
+            console.log("PLACE THE DESTROYER");
+            this.destroyerPlaced = true;
+            this.destroyerPlacing = true;
+            this.showModal = false;
+          }else{
+            console.log("This ship is already placed!");
+          }
+        },
+        fire: function (x, y) {
+          if(!this.placingShips){
+            console.log("The Fire Event is happening at coordinates (" + x + ':' + y + ')');
+            console.log(this.$refs[x + ":" + y][0].attributes[2].nodeValue);
+            this.$refs[x + ":" + y][0].attributes[2].nodeValue = this.$refs[x + ":" + y][0].attributes[2].nodeValue + 'background-color: red;';
+          }else{
+            console.log("they clicked to place a ship");
+            if(this.carrierPlacing == true){
+              this.placeC(x,y,"blue");
+            }else if(this.battleshipPlacing == true){
+              this.placeB(x,y,"blue");
+            }else if(this.cruiserPlacing == true){
+              this.placeR(x,y,"blue");
+            }else if(this.submarinePlacing == true){
+              this.placeR(x,y,"blue");
+            }else if(this.destroyerPlacing == true){
+              this.placeD(x,y,"blue");
+            }
+          }
+        },
+        placeC(x,y,color) {
+          if(x-2 > 0 && x + 2 < 11 && this.vertical){
+            this.$refs[x + ":" + y][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
+            this.$refs[x-2 + ":" + y][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
+            this.$refs[x-1 + ":" + y][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
+            this.$refs[x+1 + ":" + y][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
+            this.$refs[x+2 + ":" + y][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
+            if(color == "blue"){
+              this.showModal = true;
+              this.carrierPlacing = false;
+            }
+          }else if(y-2 > 0 && y + 2 < 11 && this.horizontal){
+            this.$refs[x + ":" + y][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
+            this.$refs[x + ":" + (y-2)][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
+            this.$refs[x + ":" + (y-1)][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
+            this.$refs[x + ":" + (y+1)][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
+            this.$refs[x + ":" + (y+2)][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
+            if(color == "blue"){
+              this.showModal = true;
+              this.carrierPlacing = false;
+            }
+          }
+        },
+        placeB(x,y,color) {
+          if(x-2 > 0 && x + 1 < 11 && this.vertical){
+            this.$refs[x + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color:'+ color +';';
+            this.$refs[x-2 + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+            this.$refs[x-1 + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+            this.$refs[x+1 + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+            if(color == "blue"){
+              this.showModal = true;
+              this.battleshipPlacing = false;
+            }
+          }else if(y-2 > 0 && y + 1 < 11 && this.horizontal){
+            this.$refs[x + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+            this.$refs[x + ":" + (y-2)][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+            this.$refs[x + ":" + (y-1)][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+            this.$refs[x + ":" + (y+1)][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+            if(color == "blue"){
+              this.showModal = true;
+              this.battleshipPlacing = false;
+            }
+          }
+        },
+        placeR(x,y,color){
+          if(x-1 > 0 && x + 1 < 11 && this.vertical){
+            this.$refs[x + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+            this.$refs[x-1 + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+            this.$refs[x+1 + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+            if(color == "blue"){
+              this.showModal = true;
+              this.cruiserPlacing = false;
+              this.submarinePlacing = false;
+            }
+          }else if(y-1 > 0 && y + 1 < 11 && this.horizontal){
+            this.$refs[x + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+            this.$refs[x + ":" + (y-1)][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+            this.$refs[x + ":" + (y+1)][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+            if(color == "blue"){
+              this.showModal = true;
+              this.cruiserPlacing = false;
+              this.submarinePlacing = false;
+            }
+          }
+        },
+        placeD(x,y,color){
+          if(x-1 > 0 && x < 11 && this.vertical){
+            this.$refs[x + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+            this.$refs[x-1 + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+            if(color == "blue"){
+              this.showModal = true;
+              this.destroyerPlacing = false;
+            }
+          }else if(y-1 > 0 && y < 11 && this.horizontal){
+            this.$refs[x + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+            this.$refs[x + ":" + (y-1)][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+            if(color == "blue"){
+              this.showModal = true;
+              this.destroyerPlacing = false;
+            }
+          }
+        },
+        hover: function(x, y){
+          for(i = 1; i < 11; i++){
+            for(j = 1; j < 11; j++){
+              //console.log(this.$refs[i + ":" + j][0].attributes[2].nodeValue);
+              if(this.$refs[i + ":" + j][0].attributes[2].nodeValue.includes("blue")){
+
+              }else{
+                this.$refs[i + ":" + j][0].attributes[2].nodeValue = "width: 10%;";
+              }
+            }
+          }
+          if(this.carrierPlacing == true){
+            this.placeC(x,y,"gray");
+          }else if(this.battleshipPlacing == true){
+            this.placeB(x,y,"gray");
+          }else if(this.cruiserPlacing == true){
+            this.placeR(x,y,"gray");
+          }else if(this.destroyerPlacing == true){
+            this.placeD(x,y,"gray");
+          }else if(this.submarinePlacing == true){
+            this.placeR(x,y,"gray");
+          }
+        },
+        recieveResposne: function(){
+
+        },
+        recieveFire: function(x, y){
+
+        },
+        Rotate: function(){
+          if(this.vertical){
+            this.vertical = false;
+            this.horizontal = true;
+          }else{
+            this.vertical = true;
+            this.horizontal = false;
+          }
+        },
+      },
+      created: function () {
+        socket = io();
+        this.showModal = true;
+      },
+      mounted: function () {
+
+      },
+      watch: {
+        // whenever question changes, this function will run
+        showModal: function () {
+          if(this.showModal == true){
+            $("#myModal").modal('show');
+          }else{
+            $("#myModal").modal('hide');
+          }
+        },
+    },
+    });
+  </script>
+</body>
+</html>
+<style>
+.row{
+  width: 50%;
+  display: flex;
+  margin: 0 auto;
+  height: 8%;
+  border: 1px solid black;
+  border-top-width: 0;
+}
+
+.column{
+  border-left: 1px solid black;
+}
+
+#column1{
+  border-left-width: 0;
+}
+
+#row1{
+  border-top-width:1px;
+}
+
+#battleship{
+  //margin-top: 15%;
+}
+
+html,body,#app,#battleship{
+  height: 100%;
+}
+
+.placeShip{
+  cursor: pointer;
+}
+
+.disabled{
+  color: gray;
+  cursor: default;
+}
+
+.rotate {
+  background-color : #31B0D5;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  border-color: #46b8da;
+}
+
+#mybutton {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+}
+</style>
