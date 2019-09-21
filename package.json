@@ -1,0 +1,25 @@
+{
+  "name": "battleship",
+  "version": "1.0.0",
+  "description": "A battleship client",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MrVintage710/BattleShip.git"
+  },
+  "author": "Jonah/Brooks",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MrVintage710/BattleShip/issues"
+  },
+  "homepage": "https://github.com/MrVintage710/BattleShip#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "save": "^2.4.0",
+    "socket.io": "^2.3.0",
+    "uuid": "^3.3.3"
+  }
+}
