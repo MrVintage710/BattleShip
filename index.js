@@ -6,7 +6,7 @@ const uuid = require("uuid/v1");
 
 class Queue {
     constructor() {
-        this.list = []; 
+        this.list = [];
     }
 
     push(player) {
@@ -32,7 +32,7 @@ class Queue {
         if(this.list.length >= 2) {
             var room = new Room(this.pop(), this.pop())
             rooms.push(room);
-    
+
             console.log(`New Pair Made! Room ID: ${room.uuid}`)
         }
     }
@@ -74,7 +74,7 @@ var rooms = [];
 
 app.use('/public', express.static(__dirname + '/public'))
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/test.html')
+    res.sendFile(__dirname + '/index.html')
 });
 
 io.on('connection', (socket) => {

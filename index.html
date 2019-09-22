@@ -136,85 +136,104 @@
             }
           }
         },
+        checkCollision(x,y){
+          return this.$refs[x + ":" + y][0].attributes[2].nodeValue.includes("blue");
+        },
         placeC(x,y,color) {
           if(x-2 > 0 && x + 2 < 11 && this.vertical){
-            this.$refs[x + ":" + y][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
-            this.$refs[x-2 + ":" + y][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
-            this.$refs[x-1 + ":" + y][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
-            this.$refs[x+1 + ":" + y][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
-            this.$refs[x+2 + ":" + y][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
-            if(color == "blue"){
-              this.showModal = true;
-              this.carrierPlacing = false;
+            if(!(this.checkCollision(x,y) || this.checkCollision(x+1,y) || this.checkCollision(x+2,y) || this.checkCollision(x-1,y) || this.checkCollision(x-2,y))){
+              this.$refs[x + ":" + y][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
+              this.$refs[x-2 + ":" + y][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
+              this.$refs[x-1 + ":" + y][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
+              this.$refs[x+1 + ":" + y][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
+              this.$refs[x+2 + ":" + y][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
+              if(color == "blue"){
+                this.showModal = true;
+                this.carrierPlacing = false;
+              }
             }
           }else if(y-2 > 0 && y + 2 < 11 && this.horizontal){
-            this.$refs[x + ":" + y][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
-            this.$refs[x + ":" + (y-2)][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
-            this.$refs[x + ":" + (y-1)][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
-            this.$refs[x + ":" + (y+1)][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
-            this.$refs[x + ":" + (y+2)][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
-            if(color == "blue"){
-              this.showModal = true;
-              this.carrierPlacing = false;
+            if(!(this.checkCollision(x,y) || this.checkCollision(x,y+1) || this.checkCollision(x,y+2) || this.checkCollision(x,y-1) || this.checkCollision(x,y-2))){
+                this.$refs[x + ":" + y][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
+                this.$refs[x + ":" + (y-2)][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
+                this.$refs[x + ":" + (y-1)][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
+                this.$refs[x + ":" + (y+1)][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
+                this.$refs[x + ":" + (y+2)][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
+              if(color == "blue"){
+                this.showModal = true;
+                this.carrierPlacing = false;
+              }
             }
           }
         },
         placeB(x,y,color) {
           if(x-2 > 0 && x + 1 < 11 && this.vertical){
-            this.$refs[x + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color:'+ color +';';
-            this.$refs[x-2 + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
-            this.$refs[x-1 + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
-            this.$refs[x+1 + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
-            if(color == "blue"){
-              this.showModal = true;
-              this.battleshipPlacing = false;
+            if(!(this.checkCollision(x,y) || this.checkCollision(x-2,y) || this.checkCollision(x-1,y) || this.checkCollision(x+1,y))){
+              this.$refs[x + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color:'+ color +';';
+              this.$refs[x-2 + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+              this.$refs[x-1 + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+              this.$refs[x+1 + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+              if(color == "blue"){
+                this.showModal = true;
+                this.battleshipPlacing = false;
+              }
             }
           }else if(y-2 > 0 && y + 1 < 11 && this.horizontal){
-            this.$refs[x + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
-            this.$refs[x + ":" + (y-2)][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
-            this.$refs[x + ":" + (y-1)][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
-            this.$refs[x + ":" + (y+1)][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
-            if(color == "blue"){
-              this.showModal = true;
-              this.battleshipPlacing = false;
+            if(!(this.checkCollision(x,y) || this.checkCollision(x,y+1) || this.checkCollision(x,y-1) || this.checkCollision(x,y-2))){
+              this.$refs[x + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+              this.$refs[x + ":" + (y-2)][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+              this.$refs[x + ":" + (y-1)][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+              this.$refs[x + ":" + (y+1)][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+              if(color == "blue"){
+                this.showModal = true;
+                this.battleshipPlacing = false;
+              }
             }
           }
         },
         placeR(x,y,color){
           if(x-1 > 0 && x + 1 < 11 && this.vertical){
-            this.$refs[x + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
-            this.$refs[x-1 + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
-            this.$refs[x+1 + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
-            if(color == "blue"){
-              this.showModal = true;
-              this.cruiserPlacing = false;
-              this.submarinePlacing = false;
+            if(!(this.checkCollision(x,y) || this.checkCollision(x-1,y) || this.checkCollision(x+1,y))){
+              this.$refs[x + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+              this.$refs[x-1 + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+              this.$refs[x+1 + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+              if(color == "blue"){
+                this.showModal = true;
+                this.cruiserPlacing = false;
+                this.submarinePlacing = false;
+              }
             }
           }else if(y-1 > 0 && y + 1 < 11 && this.horizontal){
-            this.$refs[x + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
-            this.$refs[x + ":" + (y-1)][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
-            this.$refs[x + ":" + (y+1)][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
-            if(color == "blue"){
-              this.showModal = true;
-              this.cruiserPlacing = false;
-              this.submarinePlacing = false;
+            if(!(this.checkCollision(x,y) || this.checkCollision(x,y-1) || this.checkCollision(x,y+1))){
+              this.$refs[x + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+              this.$refs[x + ":" + (y-1)][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+              this.$refs[x + ":" + (y+1)][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+              if(color == "blue"){
+                this.showModal = true;
+                this.cruiserPlacing = false;
+                this.submarinePlacing = false;
+              }
             }
           }
         },
         placeD(x,y,color){
           if(x-1 > 0 && x < 11 && this.vertical){
-            this.$refs[x + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
-            this.$refs[x-1 + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
-            if(color == "blue"){
-              this.showModal = true;
-              this.destroyerPlacing = false;
+            if(!(this.checkCollision(x,y) || this.checkCollision(x-1,y))){
+              this.$refs[x + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+              this.$refs[x-1 + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+              if(color == "blue"){
+                this.showModal = true;
+                this.destroyerPlacing = false;
+              }
             }
           }else if(y-1 > 0 && y < 11 && this.horizontal){
-            this.$refs[x + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
-            this.$refs[x + ":" + (y-1)][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
-            if(color == "blue"){
-              this.showModal = true;
-              this.destroyerPlacing = false;
+            if(!(this.checkCollision(x,y) || this.checkCollision(x,y-1))){
+              this.$refs[x + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+              this.$refs[x + ":" + (y-1)][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
+              if(color == "blue"){
+                this.showModal = true;
+                this.destroyerPlacing = false;
+              }
             }
           }
         },
@@ -268,7 +287,7 @@
         // whenever question changes, this function will run
         showModal: function () {
           if(this.showModal == true){
-            $("#myModal").modal('show');
+            $('#myModal').modal({backdrop: 'static', keyboard: false});
           }else{
             $("#myModal").modal('hide');
           }
