@@ -61,6 +61,14 @@ class Room {
             this.player1.room = null;
             queue.push(this.player1);
         }
+
+        for( var i = 0; i < rooms.length; i++){
+            if ( rooms[i].uuid == this.uuid) {
+              rooms.splice(i, 1);
+              console.log("Removed room from rooms.")
+            }
+         }
+
         console.log(`Room(${this.uuid}) closed because Player(${player.uuid}) left.`)
     }
 
