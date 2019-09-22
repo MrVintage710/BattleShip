@@ -153,9 +153,9 @@
             }else if(this.battleshipPlacing == true){
               this.placeB(x,y,"blue");
             }else if(this.cruiserPlacing == true){
-              this.placeR(x,y,"blue");
+              this.placeR(x,y,"blue", "cruiser");
             }else if(this.submarinePlacing == true){
-              this.placeR(x,y,"blue");
+              this.placeR(x,y,"blue", "submarine");
             }else if(this.destroyerPlacing == true){
               this.placeD(x,y,"blue");
             }
@@ -180,6 +180,12 @@
               this.$refs[x+1 + ":" + y][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
               this.$refs[x+2 + ":" + y][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
               if(color == "blue"){
+                //adding ship to localboard array
+                this.localBoard[x-1][y-1] = 'C';
+                this.localBoard[x-3][y-1] = 'C';
+                this.localBoard[x-2][y-1] = 'C';
+                this.localBoard[x][y-1] = 'C';
+                this.localBoard[x+1][y-1] = 'C';
                 //if the color parameter is blue it means the user is trying to place instead of hover
                 //if this is the case we need to check if the rest of the ships have been placed or not
                 if(this.carrierPlaced && this.battleshipPlaced && this.cruiserPlaced && this.submarinePlaced && this.destroyerPlaced){
@@ -202,6 +208,12 @@
                 this.$refs[x + ":" + (y+1)][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
                 this.$refs[x + ":" + (y+2)][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
               if(color == "blue"){
+                //adding ship to localboard array
+                this.localBoard[x-1][y-1] = 'C';
+                this.localBoard[x-1][y-3] = 'C';
+                this.localBoard[x-1][y-2] = 'C';
+                this.localBoard[x-1][y] = 'C';
+                this.localBoard[x-1][y-1] = 'C';
                 //if the color parameter is blue it means the user is trying to place instead of hover
                 //if this is the case we need to check if the rest of the ships have been placed or not
                 if(this.carrierPlaced && this.battleshipPlaced && this.cruiserPlaced && this.submarinePlaced && this.destroyerPlaced){
@@ -228,6 +240,11 @@
               this.$refs[x-1 + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
               this.$refs[x+1 + ":" + y][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
               if(color == "blue"){
+                //adding ship to localboard array
+                this.localBoard[x-1][y-1] = 'B';
+                this.localBoard[x-3][y-1] = 'B';
+                this.localBoard[x-2][y-1] = 'B';
+                this.localBoard[x][y-1] = 'B';
                 //if the color parameter is blue it means the user is trying to place instead of hover
                 //if this is the case we need to check if the rest of the ships have been placed or not
                 if(this.carrierPlaced && this.battleshipPlaced && this.cruiserPlaced && this.submarinePlaced && this.destroyerPlaced){
@@ -248,9 +265,16 @@
               this.$refs[x + ":" + (y-2)][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
               this.$refs[x + ":" + (y-1)][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
               this.$refs[x + ":" + (y+1)][0].attributes[2].nodeValue = 'width: 10%; background-color: ' + color + ';';
-              //if the color parameter is blue it means the user is trying to place instead of hover
-              //if this is the case we need to check if the rest of the ships have been placed or not
+
               if(color == "blue"){
+                //adding ship to localboard array
+                this.localBoard[x-1][y-1] = 'B';
+                this.localBoard[x-1][y-3] = 'B';
+                this.localBoard[x-1][y-2] = 'B';
+                this.localBoard[x-1][y] = 'B';
+
+                //if the color parameter is blue it means the user is trying to place instead of hover
+                //if this is the case we need to check if the rest of the ships have been placed or not
                 if(this.carrierPlaced && this.battleshipPlaced && this.cruiserPlaced && this.submarinePlaced && this.destroyerPlaced){
                   console.log("EVERYTHING IS PLACED");
                   this.gameReady = true;
@@ -265,7 +289,7 @@
           }
         },
         //function to place the cruiser and submarine or view hover depending on color parameter
-        placeR(x,y,color){
+        placeR(x,y,color, ship){
           //what to do if the user is placing vertical - check for out of bounds
           if(x-1 > 0 && x + 1 < 11 && this.vertical){
             //only show/allow the user this placement option if none of the values collide
@@ -276,6 +300,18 @@
               //if the color parameter is blue it means the user is trying to place instead of hover
               //if this is the case we need to check if the rest of the ships have been placed or not
               if(color == "blue"){
+                if(ship == "submarine"){
+                  //adding ship to localboard array
+                  this.localBoard[x-1][y-1] = 'S';
+                  this.localBoard[x-2][y-1] = 'S';
+                  this.localBoard[x][y-1] = 'S';
+                }else{
+                  //adding ship to localboard array
+                  this.localBoard[x-1][y-1] = 'R';
+                  this.localBoard[x-2][y-1] = 'R';
+                  this.localBoard[x][y-1] = 'R';
+                }
+
                 if(this.carrierPlaced && this.battleshipPlaced && this.cruiserPlaced && this.submarinePlaced && this.destroyerPlaced){
                   console.log("EVERYTHING IS PLACED");
                   this.gameReady = true;
@@ -297,6 +333,17 @@
               //if the color parameter is blue it means the user is trying to place instead of hover
               //if this is the case we need to check if the rest of the ships have been placed or not
               if(color == "blue"){
+                if(ship == "submarine"){
+                  //adding ship to localboard array
+                  this.localBoard[x-1][y-1] = 'S';
+                  this.localBoard[x-1][y-2] = 'S';
+                  this.localBoard[x-1][y] = 'S';
+                }else{
+                  //adding ship to localboard array
+                  this.localBoard[x-1][y-1] = 'R';
+                  this.localBoard[x-1][y-2] = 'R';
+                  this.localBoard[x-1][y] = 'R';
+                }
                 if(this.carrierPlaced && this.battleshipPlaced && this.cruiserPlaced && this.submarinePlaced && this.destroyerPlaced){
                   console.log("EVERYTHING IS PLACED");
                   this.gameReady = true;
@@ -322,6 +369,9 @@
               //if the color parameter is blue it means the user is trying to place instead of hover
               //if this is the case we need to check if the rest of the ships have been placed or not
               if(color == "blue"){
+                //adding ship to localboard array
+                this.localBoard[x-1][y-1] = 'B';
+                this.localBoard[x][y-1] = 'B';
                 if(this.carrierPlaced && this.battleshipPlaced && this.cruiserPlaced && this.submarinePlaced && this.destroyerPlaced){
                   console.log("EVERYTHING IS PLACED");
                   this.gameReady = true;
@@ -341,6 +391,9 @@
               //if the color parameter is blue it means the user is trying to place instead of hover
               //if this is the case we need to check if the rest of the ships have been placed or not
               if(color == "blue"){
+                //adding ship to localboard array
+                this.localBoard[x-1][y-1] = 'D';
+                this.localBoard[x-1][y] = 'D';
                 if(this.carrierPlaced && this.battleshipPlaced && this.cruiserPlaced && this.submarinePlaced && this.destroyerPlaced){
                   console.log("EVERYTHING IS PLACED");
                   this.gameReady = true;
@@ -374,11 +427,11 @@
           }else if(this.battleshipPlacing == true){
             this.placeB(x,y,"gray");
           }else if(this.cruiserPlacing == true){
-            this.placeR(x,y,"gray");
+            this.placeR(x,y,"gray", "cruiser");
           }else if(this.destroyerPlacing == true){
             this.placeD(x,y,"gray");
           }else if(this.submarinePlacing == true){
-            this.placeR(x,y,"gray");
+            this.placeR(x,y,"gray", "submarine");
           }
         },
         //function to rotate the pieces during placement setting the vertical/horizontal variables - called using a button
