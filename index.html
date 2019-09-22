@@ -4,19 +4,29 @@
   <title>Battleship</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
 <body>
   <div id="app">
-    <div id="mybutton" v-if="!gameReady">
+    <div id="mybutton" v-if="!gameReady && !showSplash">
       <button class="rotate" v-on:click="Rotate()" >Rotate</button>
     </div>
-    <div id="mybutton" v-if="gameReady">
+    <div id="mybutton" v-if="gameReady && !showSplash">
       <button class="rotate" v-on:click="switchView()" >Switch View</button>
     </div>
-    <div id="battleship">
+
+    <div id="splash" v-if="showSplash">
+      <div id="splashBack">
+        <img id="splashHeader" src="/public/header_logo.png" alt="Battleship">
+        <strong id="splashText">Waiting for players.</strong>
+        <div  id="splashSpin" class="spinner-border"></div>
+      </div>
+    </div>
+
+    <div id="battleship" v-if="!showSplash">
       <div v-for="index in gameSize" :id="'row' + index" class="row friendly">
         <div v-for="index1 in gameSize" :id="'column' + index1" class="column" @mouseover="hover(index, index1)" :ref="index + ':' + index1" v-on:click="fire(index, index1)" style="width:10%">
 
@@ -74,6 +84,7 @@
         horizontal: false,
         gameReady: false,
         viewEnemy: false,
+        showSplash: true,
       },
       methods: {
         //function on click from the modal to initiate carrier placing
@@ -462,8 +473,14 @@
       //function ran on create to initialize the socket variable as well as hide the enemy board
       created: function () {
         socket = io();
-        this.showModal = true;
+
         $('.enemy').hide();
+      },
+      mounted: function () {
+
+        socket.on("room_joined", function(msg){
+          console.log(msg);
+        });
       },
       //watcher function to respond to variable changes
       watch: {
@@ -531,5 +548,36 @@ html,body,#app,#battleship{
   position: fixed;
   top: 10px;
   left: 10px;
+}
+
+#splashBack {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  background-image: url("/public/battleship.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+#splashHeader {
+  display: block;
+  margin: auto;
+  padding-top: 30vh;
+}
+
+#splashSpin {
+  font-size: 40px;
+  display: block;
+  margin: auto;
+  color: white;
+  margin-top: 12px;
+}
+
+#splashText {
+  text-align: center;
+  color: white;
+  display: block;
+  margin: auto;
+  font-size: 16pt;
 }
 </style>

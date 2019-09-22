@@ -44,13 +44,13 @@ class Room {
         this.player1 = player1;
         this.player2 = player2;
 
-        player1.join(uuid);
-        player2.join(uuid);
+        player1.join(this.uuid);
+        player2.join(this.uuid);
 
         player1.room = this;
         player2.room = this;
 
-        this.broadcast("room_joined", {'room': this.uuid})
+        this.broadcast("room_joined", {'room': this.uuid});
     }
 
     shutdown(player){
@@ -72,8 +72,8 @@ class Room {
         console.log(`Room(${this.uuid}) closed because Player(${player.uuid}) left.`)
     }
 
-    broadcast(name, mesage) {
-        io.to(this.uuid).emit(name, mesage);
+    broadcast(name, message) {
+        io.to(this.uuid).emit(name, message);
     }
 }
 
