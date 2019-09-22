@@ -477,8 +477,11 @@
         $('.enemy').hide();
       },
       mounted: function () {
+        scope=this;
 
         socket.on("room_joined", function(msg){
+          scope.showModal = true;
+          scope.showSplash = false;
           console.log(msg);
         });
       },
