@@ -67,7 +67,7 @@
       el: '#app',
       data: {
         gameSize: 10,
-        localBoard: [10][10],
+        localBoard: null,
         carrierPlaced: false,
         battleshipPlaced: false,
         submarinePlaced: false,
@@ -192,6 +192,8 @@
               this.$refs[x+2 + ":" + y][0].attributes[2].nodeValue = 'width: 10%;background-color:'+ color + ';';
               if(color == "blue"){
                 //adding ship to localboard array
+                console.log(this.gameReady);
+                console.log(this.localBoard);
                 this.localBoard[x-1][y-1] = 'C';
                 this.localBoard[x-3][y-1] = 'C';
                 this.localBoard[x-2][y-1] = 'C';
@@ -473,6 +475,11 @@
       //function ran on create to initialize the socket variable as well as hide the enemy board
       created: function () {
         socket = io();
+        this.localBoard = new Array(10);
+      
+        for (var i = 0; i < this.localBoard.length; i++) {
+          this.localBoard[i] = new Array(10);
+        }
 
         $('.enemy').hide();
       },
