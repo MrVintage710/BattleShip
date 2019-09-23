@@ -33,6 +33,12 @@
       <div class="alert alert-danger" v-else role="alert">
         Waiting for other player...
       </div>
+      <div class="alert alert-success" v-if="sunkShip" role="alert">
+        {{shipName}} has been sunk!
+      </div>
+      <div class="alert alert-danger" v-if="lostShip" role="alert">
+        {{shipName}} has been sunk!
+      </div>
       <div v-for="index in gameSize" :id="'row' + index" class="row friendly">
         <div v-for="index1 in gameSize" :id="'column' + index1" class="column" @mouseover="hover(index, index1)" :ref="index + ':' + index1" v-on:click="fire(index, index1)" style="width:10%">
 
@@ -92,6 +98,9 @@
         showSplash: true,
         myTurn: false,
         splashText: "Waiting for players.",
+        sunkShip: false,
+        lostShip: false,
+        shipName: null,
       },
       methods: {
         //function on click from the modal to initiate carrier placing
@@ -530,6 +539,8 @@
           if(scope.myTurn){
             scope.myTurn = false;
           }
+          scope.sunkShip = false;
+          scope.lostShip = false;
         });
 
         socket.on("hit", function(msg){
@@ -540,6 +551,8 @@
           if(scope.myTurn){
             scope.myTurn = false;
           }
+          scope.sunkShip = false;
+          scope.lostShip = false;
         });
 
         socket.on("sunk", function(msg) {
@@ -547,25 +560,31 @@
           console.log(msg);
           switch(msg.type){
             case 'C':
-              alert("The Carrier is sunk");
+              scope.shipName = "Carrier"
               break;
             case 'B':
-              alert("The Battleship is sunk");
+              scope.shipName = "Battleship"
               break;
             case 'S':
-              alert("The Submarine is sunk");
+                scope.shipName = "Submarine"
               break;
             case 'R':
-              alert("The Cruiser is sunk");
+                scope.shipName = "Cruiser"
               break;
             case 'D':
-              alert("The Destroyer is sunk");
+                scope.shipName = "Destroyer"
               break;
           }
+
+
           scope.$refs[msg.coord][0].attributes[2].nodeValue = 'width:10%;background-color: red;';
           if(scope.myTurn){
+            scope.sunkShip = true;
             scope.myTurn = false;
+          }else{
+            scope.lostShip = true;
           }
+          $('.alert').show();
         });
 
         socket.on("win", function(msg){
@@ -684,6 +703,5 @@ html,body,#app,#battleship{
 .alert{
   width: 50%;
   margin: 0 auto;
-  display:none;
 }
 </style>
