@@ -151,11 +151,15 @@
             if(this.viewEnemy){
               console.log(this.myTurn);
               if(this.myTurn){
-                console.log("Fire Event is happening at coordinates (" + x + ':' + y + ')');
-                console.log(this.$refs['e' + x + ":" + y][0].attributes[2].nodeValue);
-                socket.emit("fire", {"x":x, "y":y});
+                console.log((this.$refs['e' + x + ":" + y][0].attributes[2].nodeValue))
+                if(this.$refs['e' + x + ":" + y][0].attributes[2].nodeValue == 'width: 10%;'){
+                  console.log("Fire Event is happening at coordinates (" + x + ':' + y + ')');
+                  console.log(this.$refs['e' + x + ":" + y][0].attributes[2].nodeValue);
+                  socket.emit("fire", {"x":x, "y":y});
+                  this.myTurn = false;
+                }
                 //setting the enemy board at the following coordinates to red
-                this.$refs['e' + x + ":" + y][0].attributes[2].nodeValue = 'width:10%;background-color: red;';
+                //this.$refs['e' + x + ":" + y][0].attributes[2].nodeValue = 'width:10%;background-color: red;';
               }else{
                 alert("wait your turn");
               }
@@ -435,7 +439,7 @@
           //have hover blobs when the user hovers over everything
           for(i = 1; i < 11; i++){
             for(j = 1; j < 11; j++){
-              if(this.$refs[i + ":" + j][0].attributes[2].nodeValue.includes("blue")){
+              if(this.$refs[i + ":" + j][0].attributes[2].nodeValue.includes("blue") || this.$refs[i + ":" + j][0].attributes[2].nodeValue.includes("red") || this.$refs[i + ":" + j][0].attributes[2].nodeValue.includes("lightgray")){
 
               }else{
                 this.$refs[i + ":" + j][0].attributes[2].nodeValue = "width: 10%;";
@@ -508,14 +512,38 @@
 
         socket.on("miss", function(msg){
           console.log("MISS")
+          console.log(msg);
+          scope.$refs[msg.coord][0].attributes[2].nodeValue = 'width:10%;background-color: lightgray;';
         });
-        
+
         socket.on("hit", function(msg){
-          console.log("HIT")
+          console.log("HIT");
+          console.log(msg);
+          scope.$refs[msg.coord][0].attributes[2].nodeValue = 'width:10%;background-color: red;';
+          //this.$refs['e' + x + ":" + y][0].attributes[2].nodeValue = 'width:10%;background-color: red;';
         });
 
         socket.on("sunk", function(msg) {
           console.log("SUNK")
+          console.log(msg);
+          switch(msg.type){
+            case 'C':
+              alert("The Carrier is sunk");
+              break;
+            case 'B':
+              alert("The Battleship is sunk");
+              break;
+            case 'S':
+              alert("The Submarine is sunk");
+              break;
+            case 'R':
+              alert("The Cruiser is sunk");
+              break;
+            case 'D':
+              alert("The Destroyer is sunk");
+              break;
+          }
+          scope.$refs[msg.coord][0].attributes[2].nodeValue = 'width:10%;background-color: red;';
         });
       },
       //watcher function to respond to variable changes
