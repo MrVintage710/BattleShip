@@ -431,6 +431,7 @@
           console.log("EVERYTHING IS PLACED");
           this.gameReady = true;
           this.placingShips = false;
+          alert("Waiting for other player");
         },
 
         //function on hover to show the user where the ship will go
@@ -506,7 +507,7 @@
         });
 
         socket.on("your_turn", function(){
-          console.log("MOM SAID ITS MY TURN MY TURN");
+          alert("It is your turn!");
           scope.myTurn = true;
         });
 
