@@ -499,6 +499,7 @@
       },
       mounted: function () {
         scope=this;
+        var gameOver = false;
 
         socket.on("room_joined", function(msg){
           scope.showModal = true;
@@ -507,8 +508,10 @@
         });
 
         socket.on("your_turn", function(){
-          alert("It is your turn!");
-          scope.myTurn = true;
+          if(!gameOver) {
+            alert("It is your turn!");
+            scope.myTurn = true;
+          }
         });
 
         socket.on("miss", function(msg){
@@ -545,6 +548,16 @@
               break;
           }
           scope.$refs[msg.coord][0].attributes[2].nodeValue = 'width:10%;background-color: red;';
+        });
+
+        socket.on("win", function(msg){
+          gameOver = true;
+          alert("You Win!")
+        });
+
+        socket.on("lose", function(msg){
+          gameOver = true;
+          alert("You Lose!")
         });
       },
       //watcher function to respond to variable changes
@@ -584,9 +597,9 @@
   border-top-width:1px;
 }
 
-#battleship{
-  //margin-top: 15%;
-}
+/* #battleship{
+  margin-top: 15%;
+} */
 
 html,body,#app,#battleship{
   height: 100%;

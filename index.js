@@ -61,6 +61,9 @@ class Room {
         this.player2_cruiser = 3;
         this.player2_destroyer = 2;
 
+        this.player1_sink = 0;
+        this.player2_sink = 0;
+
         player1.room = this;
         player2.room = this;
 
@@ -192,6 +195,26 @@ class Room {
             }
         }
     }
+
+    playerSink(player) {
+        if(player.uuid == this.player1.uuid) {
+            this.player1_sink++;
+            if(this.player1_sink >= 5) {
+                this.player1.emit("lose", {})
+                this.player2.emit("win", {})
+                return true;
+            }
+        } else if(player.uuid == this.player2.uuid) {
+            this.player2_sink++;
+            if(this.player2_sink >= 5) {
+                this.player2.emit("lose", {})
+                this.player1.emit("win", {})
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
 
 var queue = new Queue();
@@ -229,8 +252,10 @@ io.on('connection', (socket) => {
         if(value != "_") {
            var result = socket.room.hitPlayer(otherPlayer, value)
            if(result <= 0) {
-                otherPlayer.emit("sunk", {"type":value, "coord":`${msg.x}:${msg.y}`})
-                socket.emit("sunk", {"type":value, "coord":`e${msg.x}:${msg.y}`})
+                if(!socket.room.playerSink(otherPlayer)) {
+                    otherPlayer.emit("sunk", {"type":value, "coord":`${msg.x}:${msg.y}`})
+                    socket.emit("sunk", {"type":value, "coord":`e${msg.x}:${msg.y}`})
+                }
            } else {
                 otherPlayer.emit("hit", {"coord":`${msg.x}:${msg.y}`})
                 socket.emit("hit", {"coord":`e${msg.x}:${msg.y}`})
