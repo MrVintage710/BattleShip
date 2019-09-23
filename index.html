@@ -84,6 +84,7 @@
         gameReady: false,
         viewEnemy: false,
         showSplash: true,
+        myTurn: false,
       },
       methods: {
         //function on click from the modal to initiate carrier placing
@@ -148,13 +149,18 @@
           if(!this.placingShips){
             //checks if viewing the enemy board
             if(this.viewEnemy){
-              console.log("Fire Event is happening at coordinates (" + x + ':' + y + ')');
-              console.log(this.$refs['e' + x + ":" + y][0].attributes[2].nodeValue);
-
-              socket.emit("fire", {"x":x, "y":y})
-
-              //setting the enemy board at the following coordinates to red
-              this.$refs['e' + x + ":" + y][0].attributes[2].nodeValue = 'width:10%;background-color: red;';
+              console.log(this.myTurn);
+              if(this.myTurn){
+                console.log("Fire Event is happening at coordinates (" + x + ':' + y + ')');
+                console.log(this.$refs['e' + x + ":" + y][0].attributes[2].nodeValue);
+                socket.emit("fire", {"x":x, "y":y});
+                //setting the enemy board at the following coordinates to red
+                this.$refs['e' + x + ":" + y][0].attributes[2].nodeValue = 'width:10%;background-color: red;';
+              }else{
+                alert("wait your turn");
+              }
+            }else{
+                alert("please make moves from the enemy board");
             }
           }else{
             //user is trying to place a ship
@@ -412,7 +418,7 @@
             for(var y = 0; y < this.localBoard.length; y++) {
               if(this.localBoard[x][y] == null) {
                 this.localBoard[x][y] = "_";
-              } 
+              }
             }
           }
 
@@ -496,7 +502,8 @@
         });
 
         socket.on("your_turn", function(){
-          console.log("MOM SAID ITS MY TURN MY TURN")
+          console.log("MOM SAID ITS MY TURN MY TURN");
+          scope.myTurn = true;
         });
       },
       //watcher function to respond to variable changes
