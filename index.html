@@ -27,6 +27,12 @@
     </div>
 
     <div id="battleship" v-if="!showSplash">
+      <div class="alert alert-success" v-if="myTurn" role="alert">
+        It is your turn!
+      </div>
+      <div class="alert alert-danger" v-else role="alert">
+        Waiting for other player...
+      </div>
       <div v-for="index in gameSize" :id="'row' + index" class="row friendly">
         <div v-for="index1 in gameSize" :id="'column' + index1" class="column" @mouseover="hover(index, index1)" :ref="index + ':' + index1" v-on:click="fire(index, index1)" style="width:10%">
 
@@ -157,7 +163,7 @@
                   console.log("Fire Event is happening at coordinates (" + x + ':' + y + ')');
                   console.log(this.$refs['e' + x + ":" + y][0].attributes[2].nodeValue);
                   socket.emit("fire", {"x":x, "y":y});
-                  this.myTurn = false;
+                  //this.myTurn = false;
                 }
                 //setting the enemy board at the following coordinates to red
                 //this.$refs['e' + x + ":" + y][0].attributes[2].nodeValue = 'width:10%;background-color: red;';
@@ -432,7 +438,8 @@
           console.log("EVERYTHING IS PLACED");
           this.gameReady = true;
           this.placingShips = false;
-          alert("Waiting for other player");
+          //alert("Waiting for other player");
+          $('.alert').show();
         },
 
         //function on hover to show the user where the ship will go
@@ -510,7 +517,8 @@
 
         socket.on("your_turn", function(){
           if(!gameOver) {
-            alert("It is your turn!");
+            //alert("It is your turn!");
+            console.log("it is your turn");
             scope.myTurn = true;
           }
         });
@@ -519,6 +527,9 @@
           console.log("MISS")
           console.log(msg);
           scope.$refs[msg.coord][0].attributes[2].nodeValue = 'width:10%;background-color: lightgray;';
+          if(scope.myTurn){
+            scope.myTurn = false;
+          }
         });
 
         socket.on("hit", function(msg){
@@ -526,6 +537,9 @@
           console.log(msg);
           scope.$refs[msg.coord][0].attributes[2].nodeValue = 'width:10%;background-color: red;';
           //this.$refs['e' + x + ":" + y][0].attributes[2].nodeValue = 'width:10%;background-color: red;';
+          if(scope.myTurn){
+            scope.myTurn = false;
+          }
         });
 
         socket.on("sunk", function(msg) {
@@ -549,6 +563,9 @@
               break;
           }
           scope.$refs[msg.coord][0].attributes[2].nodeValue = 'width:10%;background-color: red;';
+          if(scope.myTurn){
+            scope.myTurn = false;
+          }
         });
 
         socket.on("win", function(msg){
@@ -662,5 +679,11 @@ html,body,#app,#battleship{
   display: block;
   margin: auto;
   font-size: 16pt;
+}
+
+.alert{
+  width: 50%;
+  margin: 0 auto;
+  display:none;
 }
 </style>
