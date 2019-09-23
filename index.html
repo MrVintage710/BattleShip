@@ -150,6 +150,9 @@
             if(this.viewEnemy){
               console.log("Fire Event is happening at coordinates (" + x + ':' + y + ')');
               console.log(this.$refs['e' + x + ":" + y][0].attributes[2].nodeValue);
+
+              socket.emit("fire", {"x":x, "y":y})
+
               //setting the enemy board at the following coordinates to red
               this.$refs['e' + x + ":" + y][0].attributes[2].nodeValue = 'width:10%;background-color: red;';
             }
@@ -201,9 +204,7 @@
                 //if the color parameter is blue it means the user is trying to place instead of hover
                 //if this is the case we need to check if the rest of the ships have been placed or not
                 if(this.carrierPlaced && this.battleshipPlaced && this.cruiserPlaced && this.submarinePlaced && this.destroyerPlaced){
-                  console.log("EVERYTHING IS PLACED");
-                  this.gameReady = true;
-                  this.placingShips = false;
+                  this.finishBoard()
                 }else{
                   //if all the ships aren't placed show the modal to pick another ship
                   this.showModal = true;
@@ -229,9 +230,7 @@
                 //if the color parameter is blue it means the user is trying to place instead of hover
                 //if this is the case we need to check if the rest of the ships have been placed or not
                 if(this.carrierPlaced && this.battleshipPlaced && this.cruiserPlaced && this.submarinePlaced && this.destroyerPlaced){
-                  console.log("EVERYTHING IS PLACED");
-                  this.gameReady = true;
-                  this.placingShips = false;
+                  this.finishBoard()
                 }else{
                   //if all the ships aren't placed show the modal to pick another ship
                   this.showModal = true;
@@ -260,9 +259,7 @@
                 //if the color parameter is blue it means the user is trying to place instead of hover
                 //if this is the case we need to check if the rest of the ships have been placed or not
                 if(this.carrierPlaced && this.battleshipPlaced && this.cruiserPlaced && this.submarinePlaced && this.destroyerPlaced){
-                  console.log("EVERYTHING IS PLACED");
-                  this.gameReady = true;
-                  this.placingShips = false;
+                  this.finishBoard()
                 }else{
                   //if all the ships aren't placed show the modal to pick another ship
                   this.showModal = true;
@@ -288,9 +285,7 @@
                 //if the color parameter is blue it means the user is trying to place instead of hover
                 //if this is the case we need to check if the rest of the ships have been placed or not
                 if(this.carrierPlaced && this.battleshipPlaced && this.cruiserPlaced && this.submarinePlaced && this.destroyerPlaced){
-                  console.log("EVERYTHING IS PLACED");
-                  this.gameReady = true;
-                  this.placingShips = false;
+                  this.finishBoard()
                 }else{
                   //if all the ships aren't placed show the modal to pick another ship
                   this.showModal = true;
@@ -325,9 +320,7 @@
                 }
 
                 if(this.carrierPlaced && this.battleshipPlaced && this.cruiserPlaced && this.submarinePlaced && this.destroyerPlaced){
-                  console.log("EVERYTHING IS PLACED");
-                  this.gameReady = true;
-                  this.placingShips = false;
+                  this.finishBoard()
                 }else{
                   //if all the ships aren't placed show the modal to pick another ship
                   this.showModal = true;
@@ -357,9 +350,7 @@
                   this.localBoard[x-1][y] = 'R';
                 }
                 if(this.carrierPlaced && this.battleshipPlaced && this.cruiserPlaced && this.submarinePlaced && this.destroyerPlaced){
-                  console.log("EVERYTHING IS PLACED");
-                  this.gameReady = true;
-                  this.placingShips = false;
+                  this.finishBoard()
                 }else{
                   //if all the ships aren't placed show the modal to pick another ship
                   this.showModal = true;
@@ -385,9 +376,7 @@
                 this.localBoard[x-1][y-1] = 'B';
                 this.localBoard[x][y-1] = 'B';
                 if(this.carrierPlaced && this.battleshipPlaced && this.cruiserPlaced && this.submarinePlaced && this.destroyerPlaced){
-                  console.log("EVERYTHING IS PLACED");
-                  this.gameReady = true;
-                  this.placingShips = false;
+                  this.finishBoard()
                 }else{
                   //if all the ships aren't placed show the modal to pick another ship
                   this.showModal = true;
@@ -407,9 +396,7 @@
                 this.localBoard[x-1][y-1] = 'D';
                 this.localBoard[x-1][y] = 'D';
                 if(this.carrierPlaced && this.battleshipPlaced && this.cruiserPlaced && this.submarinePlaced && this.destroyerPlaced){
-                  console.log("EVERYTHING IS PLACED");
-                  this.gameReady = true;
-                  this.placingShips = false;
+                  this.finishBoard()
                 }else{
                   //if all the ships aren't placed show the modal to pick another ship
                   this.showModal = true;
@@ -419,6 +406,23 @@
             }
           }
         },
+
+        finishBoard() {
+          for(var x = 0; x < this.localBoard.length; x++) {
+            for(var y = 0; y < this.localBoard.length; y++) {
+              if(this.localBoard[x][y] == null) {
+                this.localBoard[x][y] = "_";
+              } 
+            }
+          }
+
+          socket.emit("board_finished", {"localBoard": this.localBoard})
+
+          console.log("EVERYTHING IS PLACED");
+          this.gameReady = true;
+          this.placingShips = false;
+        },
+
         //function on hover to show the user where the ship will go
         hover: function(x, y){
           //clear the entire board unless the value is blue to make surse we don't
@@ -489,6 +493,10 @@
           scope.showModal = true;
           scope.showSplash = false;
           console.log(msg);
+        });
+
+        socket.on("your_turn", function(){
+          console.log("MOM SAID ITS MY TURN MY TURN")
         });
       },
       //watcher function to respond to variable changes
