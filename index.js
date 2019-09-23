@@ -242,7 +242,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on('fire', function(msg){
-        console.log(`Player ${socket.uuid} fired at ${msg.x}, ${msg.y}` )
+        console.log(`Player ${socket.uuid} fired at ${msg.x}, ${msg.y}`)
 
         var otherPlayer = socket.room.getOtherPlayer(socket);
         var board  = socket.room.getBoard(otherPlayer);
@@ -255,17 +255,21 @@ io.on('connection', (socket) => {
                 if(!socket.room.playerSink(otherPlayer)) {
                     otherPlayer.emit("sunk", {"type":value, "coord":`${msg.x}:${msg.y}`})
                     socket.emit("sunk", {"type":value, "coord":`e${msg.x}:${msg.y}`})
+                    console.log("Sending 'sunk' message.")
                 }
            } else {
                 otherPlayer.emit("hit", {"coord":`${msg.x}:${msg.y}`})
                 socket.emit("hit", {"coord":`e${msg.x}:${msg.y}`})
+                console.log("Sending 'hit' message.")
            }
         } else {
             otherPlayer.emit("miss", {"coord":`${msg.x}:${msg.y}`})
             socket.emit("miss", {"coord":`e${msg.x}:${msg.y}`})
+            console.log("Sending 'miss' message.")
         }
 
         otherPlayer.emit("your_turn", {})
+        console.log(`Telling player (${otherPlayer.uuid}) that it is their turn.`)
     });
 
     socket.on('board_finished', function(msg){
