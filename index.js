@@ -148,9 +148,37 @@ class Room {
                 case "C":
                     this.player1_carrier--;
                     return this.player1_carrier;
+                case "B":
+                    this.player1_battleship--;
+                    return this.player1_battleship;
+                case "S":
+                    this.player1_submarine--;
+                    return this.player1_submarine;
+                case "R":
+                    this.player1_cruiser--;
+                    return this.player1_cruiser;
+                case "D":
+                    this.player1_destroyer--;
+                    return this.player1_destroyer;
             }
         } else if(player.uuid == this.player2.uuid) {
-            return this.player1;
+            switch(type) {
+                case "C":
+                    this.player2_carrier--;
+                    return this.player2_carrier;
+                case "B":
+                    this.player2_battleship--;
+                    return this.player2_battleship;
+                case "S":
+                    this.player2_submarine--;
+                    return this.player2_submarine;
+                case "R":
+                    this.player2_cruiser--;
+                    return this.player2_cruiser;
+                case "D":
+                    this.player2_destroyer--;
+                    return this.player2_destroyer;
+            }
         }
     }
 }
@@ -197,8 +225,8 @@ io.on('connection', (socket) => {
                 socket.emit("hit", {"coord":`e${msg.x}:${msg.y}`})
            }
         } else {
-            otherPlayer.emit("missed", {"coord":`${msg.x}:${msg.y}`})
-            socket.emit("missed", {"coord":`e${msg.x}:${msg.y}`})
+            otherPlayer.emit("miss", {"coord":`${msg.x}:${msg.y}`})
+            socket.emit("miss", {"coord":`e${msg.x}:${msg.y}`})
         }
     });
 

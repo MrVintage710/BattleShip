@@ -379,8 +379,8 @@
               //if this is the case we need to check if the rest of the ships have been placed or not
               if(color == "blue"){
                 //adding ship to localboard array
-                this.localBoard[x-1][y-1] = 'B';
-                this.localBoard[x][y-1] = 'B';
+                this.localBoard[x-1][y-1] = 'D';
+                this.localBoard[x-2][y-1] = 'D';
                 if(this.carrierPlaced && this.battleshipPlaced && this.cruiserPlaced && this.submarinePlaced && this.destroyerPlaced){
                   this.finishBoard()
                 }else{
@@ -400,7 +400,7 @@
               if(color == "blue"){
                 //adding ship to localboard array
                 this.localBoard[x-1][y-1] = 'D';
-                this.localBoard[x-1][y] = 'D';
+                this.localBoard[x-1][y-2] = 'D';
                 if(this.carrierPlaced && this.battleshipPlaced && this.cruiserPlaced && this.submarinePlaced && this.destroyerPlaced){
                   this.finishBoard()
                 }else{
@@ -505,7 +505,7 @@
           console.log("MOM SAID ITS MY TURN MY TURN");
           scope.myTurn = true;
         });
-        
+
         socket.on("miss", function(msg){
           console.log("MISS")
         });
