@@ -161,6 +161,12 @@ class Room {
                     this.player1_destroyer--;
                     return this.player1_destroyer;
             }
+
+            if(this.player1_carrier <= 0 && this.player1_battleship <= 0 && this.player1_submarine <= 0 && this.player1_cruiser <= 0 && this.player1_destroyer <= 0) {
+                this.player1.emit("lose", {})
+                this.player2.emit("win", {})
+            }
+            
         } else if(player.uuid == this.player2.uuid) {
             switch(type) {
                 case "C":
@@ -178,6 +184,11 @@ class Room {
                 case "D":
                     this.player2_destroyer--;
                     return this.player2_destroyer;
+            }
+
+            if(this.player2_carrier <= 0 && this.player2_battleship <= 0 && this.player2_submarine <= 0 && this.player2_cruiser <= 0 && this.player2_destroyer <= 0) {
+                this.player2.emit("lose", {})
+                this.player1.emit("win", {})
             }
         }
     }
