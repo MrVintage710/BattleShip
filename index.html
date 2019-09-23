@@ -21,8 +21,8 @@
     <div id="splash" v-if="showSplash">
       <div id="splashBack">
         <img id="splashHeader" src="/public/header_logo.png" alt="Battleship">
-        <strong id="splashText">Waiting for players.</strong>
-        <div  id="splashSpin" class="spinner-border"></div>
+        <strong id="splashText">{{splashText}}</strong>
+        <div  id="splashSpin" v-if='splashText == "Waiting for players."' class="spinner-border"></div>
       </div>
     </div>
 
@@ -85,6 +85,7 @@
         viewEnemy: false,
         showSplash: true,
         myTurn: false,
+        splashText: "Waiting for players.",
       },
       methods: {
         //function on click from the modal to initiate carrier placing
@@ -552,12 +553,16 @@
 
         socket.on("win", function(msg){
           gameOver = true;
-          alert("You Win!")
+          scope.splashText = "You Win!"
+          scope.showSplash = true;
+          //alert("You Win!")
         });
 
         socket.on("lose", function(msg){
           gameOver = true;
-          alert("You Lose!")
+          scope.splashText = "You Lose..."
+          scope.showSplash = true;
+          //alert("You Lose!")
         });
       },
       //watcher function to respond to variable changes
