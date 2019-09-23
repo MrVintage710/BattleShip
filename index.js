@@ -228,6 +228,8 @@ io.on('connection', (socket) => {
             otherPlayer.emit("miss", {"coord":`${msg.x}:${msg.y}`})
             socket.emit("miss", {"coord":`e${msg.x}:${msg.y}`})
         }
+
+        otherPlayer.emit("your_turn", {})
     });
 
     socket.on('board_finished', function(msg){
