@@ -505,6 +505,18 @@
           console.log("MOM SAID ITS MY TURN MY TURN");
           scope.myTurn = true;
         });
+        
+        socket.on("miss", function(msg){
+          console.log("MISS")
+        });
+        
+        socket.on("hit", function(msg){
+          console.log("HIT")
+        });
+
+        socket.on("sunk", function(msg) {
+          console.log("SUNK")
+        });
       },
       //watcher function to respond to variable changes
       watch: {
